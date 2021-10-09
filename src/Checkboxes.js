@@ -46,7 +46,7 @@ function sumAvailability(calendar_list) {
       availability += 1;
     }
   }
-  return (1 - availability / sumOfDays) * 100;
+  return Number((1 - availability / sumOfDays) * 100).toPrecision(3);
 }
 
 export function Checkboxes() {
