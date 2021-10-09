@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const employees_list = [1, 2, 3, 4, 5];
 const boxes_list = [
-  { id: 0, dayState: 1, disabled: false },
+  { id: 1, dayState: 1, disabled: false },
   { id: 2, dayState: 1, disabled: false },
   { id: 3, dayState: 1, disabled: false },
   { id: 4, dayState: 1, disabled: false },
@@ -35,16 +35,29 @@ const boxes_list = [
   { id: 30, dayState: 1, disabled: false },
   { id: 31, dayState: 1, disabled: false }
 ];
-const Checkbox = (props) => <input type="checkbox" {...props} />;
+
+function sumAvailability(calendar_list) {
+  const activeDays = calendar_list.filter((v) => v.disabled === false);
+  let availability = 0;
+  let sumOfDays = 0;
+  for (const day of activeDays) {
+    sumOfDays += 1;
+    if (day.dayState !== 1) {
+      availability += 1;
+    }
+  }
+  return (1 - availability / sumOfDays) * 100;
+}
 
 export function Checkboxes() {
   const [checkState, setCheckState] = useState(boxes_list);
 
   const changeCheckState = (id, dayS) => {
-    console.log(id, dayS);
-
     const oldArray = checkState.filter((v) => v.id !== id);
-    setCheckState([...oldArray, { id: id, dayState: dayS + 1 }]);
+    setCheckState([
+      ...oldArray,
+      { id: id, dayState: (dayS + 1) % 3, disabled: false }
+    ]);
   };
 
   return (
@@ -61,6 +74,7 @@ export function Checkboxes() {
                   {...item}
                 />
               ))}
+            {`Availability: ${sumAvailability(checkState)} %`}
           </Wrapper>
         ))}
     </div>
@@ -78,8 +92,8 @@ const StyledCheckbox = styled.div`
   margin-top: 2px;
   margin-left: 2px;
   display: flex;
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
   background: ${(props) => switchColor(props.dayState)};
   border-radius: 3px;
   transition: all 150ms;
@@ -88,16 +102,15 @@ const StyledCheckbox = styled.div`
     props.disabled &&
     `
       pointer-events: none;
-      opacity: 0.2;
-      background: #2a3eb1;
+      opacity: 0.4;
+      background: #000;
     `}
 `;
 
 function switchColor(itemValue) {
-  const switcher = itemValue % 3;
-  switch (switcher) {
+  switch (itemValue) {
     case 0:
-      return "#4caf50";
+      return "#ffc107";
       break;
     case 1:
       return "#f5f5f5";
