@@ -70,9 +70,12 @@ export function Checkboxes() {
               .sort((a, b) => a.id - b.id)
               .map((item) => (
                 <StyledCheckbox
+                  key={item.id}
                   onClick={() => changeCheckState(item.id, item.dayState)}
                   {...item}
-                />
+                >
+                  {item.id}
+                </StyledCheckbox>
               ))}
             {`Availability: ${sumAvailability(checkState)} %`}
           </Wrapper>
@@ -104,6 +107,7 @@ const StyledCheckbox = styled.div`
       pointer-events: none;
       opacity: 0.4;
       background: #000;
+      color: #fff;
     `}
 `;
 
