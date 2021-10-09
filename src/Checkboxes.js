@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
 
+const employees_list = [1, 2, 3, 4, 5];
 const boxes_list = [
   { id: 0, dayState: 1, disabled: false },
   { id: 2, dayState: 1, disabled: false },
@@ -47,16 +48,22 @@ export function Checkboxes() {
   };
 
   return (
-    <Wrapper>
-      {checkState
-        .sort((a, b) => a.id - b.id)
-        .map((item) => (
-          <StyledCheckbox
-            onClick={() => changeCheckState(item.id, item.dayState)}
-            {...item}
-          />
+    <div>
+      {employees_list
+        .sort((a, b) => a - b)
+        .map((empl) => (
+          <Wrapper>
+            {checkState
+              .sort((a, b) => a.id - b.id)
+              .map((item) => (
+                <StyledCheckbox
+                  onClick={() => changeCheckState(item.id, item.dayState)}
+                  {...item}
+                />
+              ))}
+          </Wrapper>
         ))}
-    </Wrapper>
+    </div>
   );
 }
 
@@ -81,7 +88,8 @@ const StyledCheckbox = styled.div`
     props.disabled &&
     `
       pointer-events: none;
-      opacity: 0.4;
+      opacity: 0.2;
+      background: #2a3eb1;
     `}
 `;
 
@@ -89,13 +97,13 @@ function switchColor(itemValue) {
   const switcher = itemValue % 3;
   switch (switcher) {
     case 0:
-      return "green";
+      return "#4caf50";
       break;
     case 1:
-      return "papayawhip";
+      return "#f5f5f5";
       break;
     case 2:
-      return "red";
+      return "#f50057";
       break;
     default:
       return "black";
