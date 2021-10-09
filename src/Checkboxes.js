@@ -85,6 +85,7 @@ export function Checkboxes() {
 }
 
 const Wrapper = styled.div`
+  margin-top: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: row;
