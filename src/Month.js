@@ -56,6 +56,7 @@ export class Month extends React.Component {
       <Container>
         {this.state.isLoading && <Progress />}
         <Wrapper disabled={this.state.isLoading}>
+          {"Jan Kowalski"}
           {this.state.days
             .sort((a, b) => a.id - b.id)
             .map((item) => (
@@ -90,6 +91,8 @@ const Progress = styled(CircularProgress)`
   position: absolute;
   top: 2px;
   left: 8px;
+  width: 35px;
+  height: 35px;
 `;
 const Wrapper = styled.div`
   margin-top: 8px;
@@ -109,7 +112,6 @@ const Wrapper = styled.div`
 const StyledCheckbox = styled.div`
   margin-top: 2px;
   margin-left: 2px;
-  display: flex;
   width: 40px;
   height: 40px;
   background: ${(props) => switchColor(props.dayState)};
