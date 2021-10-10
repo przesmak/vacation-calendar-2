@@ -10,6 +10,13 @@ export default function App() {
       {/* <Checkboxes /> */}
       <Month days={montConfig} update={montConfig_fromServer} />
       <Month days={montConfig} />
+      <Month days={montConfig} />
+      <Month days={montConfig} />
+      <Month days={montConfig} />
+      <Month days={montConfig} />
+      <Month days={montConfig} />
+      <Month days={montConfig} />
+      <Month days={montConfig} />
     </div>
   );
 }

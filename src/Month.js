@@ -1,3 +1,4 @@
+import { CircularProgress } from "@material-ui/core";
 import React from "react";
 import styled from "styled-components";
 
@@ -6,7 +7,8 @@ export class Month extends React.Component {
     super(props);
     this.state = {
       days: this.props.days,
-      stateChanged: false
+      stateChanged: false,
+      isLoading: false
     };
   }
 
@@ -20,13 +22,25 @@ export class Month extends React.Component {
     const activeDays = calendar_list.filter((v) => v.disabled === false);
     let availability = 0;
     let sumOfDays = 0;
+    let sumOfHours = 0;
     for (const day of activeDays) {
       sumOfDays += 1;
-      if (day.dayState !== 1) {
+      if (day.dayState !== 0) {
         availability += 1;
+      } else {
+        sumOfHours += 7.5;
       }
     }
-    return Number((1 - availability / sumOfDays) * 100).toPrecision(3);
+    return {
+      hours: sumOfHours,
+      availability: Number((1 - availability / sumOfDays) * 100).toPrecision(3)
+    };
+  }
+
+  handleSubmit() {
+    this.setState({ isLoading: true });
+    setTimeout(() => this.setState({ isLoading: false }), 2000);
+    this.setState({ stateChanged: false });
   }
 
   changeDaysState(id, dayS) {
@@ -39,8 +53,9 @@ export class Month extends React.Component {
 
   render() {
     return (
-      <div>
-        <Wrapper>
+      <Container>
+        {this.state.isLoading && <Progress />}
+        <Wrapper disabled={this.state.isLoading}>
           {this.state.days
             .sort((a, b) => a.id - b.id)
             .map((item) => (
@@ -52,20 +67,43 @@ export class Month extends React.Component {
                 {item.id}
               </StyledCheckbox>
             ))}
-          <button disabled={!this.state.stateChanged}>{"Change"}</button>
+          <button
+            disabled={!this.state.stateChanged}
+            onClick={() => this.handleSubmit()}
+          >
+            {"Save"}
+          </button>
         </Wrapper>
-        {`Availability: ${this.sumAvailability(this.state.days)} %`}
-      </div>
+        {`Availability: ${
+          this.sumAvailability(this.state.days).availability
+        } % Hours available: ${this.sumAvailability(this.state.days).hours} h`}
+      </Container>
     );
   }
 }
 
+const Container = styled.div`
+  position: relative;
+`;
+
+const Progress = styled(CircularProgress)`
+  position: absolute;
+  top: 2px;
+  left: 8px;
+`;
 const Wrapper = styled.div`
   margin-top: 8px;
   overflow: hidden;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  transition: all 300ms;
+  ${(props) =>
+    props.disabled &&
+    `
+      pointer-events: none;
+      opacity: 0.4;
+    `}
 `;
 
 const StyledCheckbox = styled.div`
@@ -91,13 +129,13 @@ const StyledCheckbox = styled.div`
 function switchColor(itemValue) {
   switch (itemValue) {
     case 0:
-      return "#ffc107";
-      break;
-    case 1:
       return "#f5f5f5";
       break;
-    case 2:
+    case 1:
       return "#f50057";
+      break;
+    case 2:
+      return "#ffc107";
       break;
     default:
       return "black";
